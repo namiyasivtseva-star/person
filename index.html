@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SivtsevaNamiya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Ruslan+Display&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<div class="desktop-only-msg">
+  <h2>✝ Только для компьютера</h2>
+  <p>Откройте сайт на ПК или ноутбуке.</p>
+</div>
+
+<div class="bg"></div>
+
+<!-- Серебряный крест (общий символ) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fdfdfd"/>
+      <stop offset=".35" stop-color="#a9acb3"/>
+      <stop offset=".55" stop-color="#eef0f3"/>
+      <stop offset=".8" stop-color="#7d8088"/>
+      <stop offset="1" stop-color="#d6d8dc"/>
+    </linearGradient>
+    <symbol id="crossShape" viewBox="0 0 100 160">
+      <path d="M42 0 H58 V38 H90 V56 H58 V148 L50 160 L42 148 V56 H10 V38 H42Z"
+            fill="url(#silver)" stroke="#2a2a2e" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M50 6 V150 M14 47 H86" stroke="#fff" stroke-opacity=".55" stroke-width="1.2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header>
+  <a class="logo" href="#top">SivtsevaNamiya</a>
+</header>
+
+<section class="hero" id="top">
+  <canvas id="scene"></canvas>
+  <div class="loader" id="loader">Пробуждаю скелет…</div>
+
+  <!-- Левая колонка -->
+  <div class="col l">
+  <div class="slot">
+    <h3 class="label">Обо мне</h3>
+    <div class="stage">
+      <button class="cross" aria-label="Открыть: Обо мне"><svg viewBox="0 0 100 160"><use href="#crossShape"/></svg></button>
+      <article class="card">
+        <button class="x" aria-label="Закрыть">×</button>
+        <p>Привет! Я Намыйа — студентка, занимающаяся программированием на разных языках. Люблю изучать новое, стараюсь делать хоть что-то каждый день.</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="slot">
+    <h3 class="label">Навыки</h3>
+    <div class="stage">
+      <button class="cross" aria-label="Открыть: Навыки"><svg viewBox="0 0 100 160"><use href="#crossShape"/></svg></button>
+      <article class="card">
+        <button class="x" aria-label="Закрыть">×</button>
+        <ul>
+          <li>C/C++</li><li>C#</li><li>Python</li><li>JavaScript</li><li>Git</li><li>Linux</li><li>Алгоритмы</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- Правая колонка -->
+  <div class="col r">
+  <div class="slot">
+    <h3 class="label">Интересы</h3>
+    <div class="stage">
+      <button class="cross" aria-label="Открыть: Интересы"><svg viewBox="0 0 100 160"><use href="#crossShape"/></svg></button>
+      <article class="card">
+        <button class="x" aria-label="Закрыть">×</button>
+        <p>Люблю дизайнить и монтировать видео, поэтому занимаюсь аккаунтом в тик токе. Люблю сидеть дома, слушать музыку.</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="slot">
+    <h3 class="label">Учёба</h3>
+    <div class="stage">
+      <button class="cross" aria-label="Открыть: Учёба"><svg viewBox="0 0 100 160"><use href="#crossShape"/></svg></button>
+      <article class="card">
+        <button class="x" aria-label="Закрыть">×</button>
+        <p>2 курс ДВФУ, направление «Прикладная математика и информатика», профиль «Системное программирование». Обожаю ООП и Матанализ.</p>
+      </article>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="scroll-hint">листай вниз ↓</div>
+</section>
+
+<section class="contacts" id="contacts">
+  <h2>Контакты</h2>
+  <div class="links">
+    <a href="https://t.me/kallnam" target="_blank" rel="noopener"><b>Telegram</b><span>@kallnam</span></a>
+    <a href="tel:+79627330560"><b>Телефон</b><span>+7 (962) 733-05-60</span></a>
+    <a href="mailto:sivtceva.ny@dvfu.ru"><b>Почта</b><span>sivtceva.ny@dvfu.ru</span></a>
+  </div>
+</section>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: #e8dede;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  background: #000;
+  overflow-x: hidden;
+}
+
+/* ---------- Фон: статичный, сверху чёрный -> вниз тёмно-красный ---------- */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, #000 0%, #000 22%, #1a0204 55%, #3d0509 80%, #52070c 100%);
+}
+
+/* ---------- Шапка ---------- */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 30;
+  padding: 14px 44px 12px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .95), rgba(14, 0, 2, .82));
+  border-bottom: 2px solid #6a0c14;
+  box-shadow: 0 6px 34px rgba(150, 0, 15, .4);
+  backdrop-filter: blur(6px);
+}
+.logo {
+  font-family: 'Pirata One', 'Old English Text MT', serif;
+  font-size: 68px;
+  line-height: 1;
+  color: #d9d9de;
+  text-decoration: none;
+  letter-spacing: .04em;
+  text-shadow: 0 0 10px rgba(190, 10, 25, .85), 0 0 30px rgba(190, 10, 25, .5);
+  transition: text-shadow .3s, color .3s;
+}
+.logo:hover { color: #fff; text-shadow: 0 0 14px #ff1c2e, 0 0 44px #c8101f; }
+
+/* ---------- Первый экран ---------- */
+.hero {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  min-height: 680px;
+}
+#scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+#scene.dragging { cursor: grabbing; }
+
+.loader {
+  position: absolute;
+  left: 50%; top: 52%;
+  transform: translate(-50%, -50%);
+  font-family: 'Ruslan Display', serif;
+  font-size: 22px;
+  color: #b3131f;
+  pointer-events: none;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.loader.hidden { display: none; }
+@keyframes pulse { 50% { opacity: .3; } }
+
+.scroll-hint {
+  position: absolute;
+  bottom: 16px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 15px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #8a6a6e;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+/* ---------- Колонки по бокам (слоты идут друг под другом, не накладываются) ---------- */
+.col {
+  position: absolute;
+  top: 130px;
+  width: clamp(210px, 17vw, 260px);
+  display: flex;
+  flex-direction: column;
+  gap: 46px;
+  z-index: 5;
+}
+.col.l { left: 3vw; }
+.col.r { right: 3vw; }
+
+.slot { text-align: center; }
+
+.label {
+  margin: 0 0 8px;
+  font-family: 'Ruslan Display', 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 27px;
+  letter-spacing: .08em;
+  color: #c4121f;
+  text-shadow: 0 0 8px rgba(255, 20, 40, .55), 0 3px 0 #200003, 0 0 24px rgba(120, 0, 10, .9);
+  animation: flicker 6s infinite;
+}
+@keyframes flicker {
+  0%, 18%, 22%, 62%, 66%, 100% { opacity: 1; }
+  20%, 64% { opacity: .55; }
+  21% { opacity: .9; }
+}
+
+.stage {
+  position: relative;
+  min-height: 130px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  perspective: 700px;
+}
+
+/* ---------- Крест (меньше) ---------- */
+.cross {
+  position: relative;
+  width: 76px;
+  height: 122px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .9)) drop-shadow(0 0 8px rgba(200, 205, 220, .25));
+  animation: bob 5s ease-in-out infinite alternate;
+  transition: filter .3s;
+}
+.cross svg { width: 100%; height: 100%; display: block; transform-style: preserve-3d; }
+.cross:hover { filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .9)) drop-shadow(0 0 16px rgba(255, 40, 55, .8)); }
+.col .slot:nth-child(2) .cross { animation-duration: 6s; }
+.col.r .cross { animation-delay: -2s; }
+@keyframes bob { from { translate: 0 -5px; } to { translate: 0 5px; } }
+
+/* быстрое вращение + вспышка */
+.cross.spin { pointer-events: none; animation: none; }
+.cross.spin svg { animation: spin .8s cubic-bezier(.4, 0, .6, 1) forwards; }
+@keyframes spin {
+  0%   { transform: rotateY(0); filter: brightness(1); }
+  60%  { filter: brightness(3.5) drop-shadow(0 0 25px #fff); }
+  100% { transform: rotateY(1800deg); filter: brightness(6) drop-shadow(0 0 40px #ff2a3c); }
+}
+.flash {
+  position: absolute;
+  left: 50%; top: 61px;
+  width: 36px; height: 36px;
+  margin: -18px 0 0 -18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, #ff6b78 30%, rgba(190, 0, 20, .6) 55%, transparent 72%);
+  pointer-events: none;
+  z-index: 3;
+  animation: flash .8s ease-out forwards;
+}
+@keyframes flash {
+  0%   { transform: scale(.5); opacity: 0; }
+  55%  { transform: scale(5); opacity: 1; }
+  100% { transform: scale(8); opacity: 0; }
+}
+
+/* ---------- Карточка: теперь в потоке, поэтому соседей не перекрывает ---------- */
+.card {
+  display: none;
+  position: relative;
+  width: 100%;
+  padding: 18px 18px 16px;
+  text-align: left;
+  border-radius: 26px;
+  background: linear-gradient(160deg, rgba(28, 6, 9, .96), rgba(6, 0, 1, .96));
+  border: 1px solid #6e0f18;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .04) inset, 0 0 26px rgba(170, 8, 22, .5), 0 12px 34px rgba(0, 0, 0, .85);
+}
+.card.show { display: block; animation: reveal .55s cubic-bezier(.2, 1.3, .4, 1) both; }
+@keyframes reveal {
+  from { transform: scale(.2); opacity: 0; filter: brightness(4); }
+  to   { transform: scale(1);  opacity: 1; filter: brightness(1); }
+}
+.card p { margin: 4px 0 0; padding-right: 8px; font-size: 17px; line-height: 1.4; font-weight: 600; color: #e4d6d6; }
+.card ul { margin: 14px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.card li {
+  padding: 3px 11px;
+  border-radius: 999px;
+  border: 1px solid #7c1019;
+  background: rgba(120, 8, 20, .25);
+  font-size: 16px;
+  font-weight: 700;
+  color: #f0dede;
+}
+.x {
+  position: absolute;
+  top: 6px; right: 10px;
+  width: 26px; height: 26px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #9a5a60;
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color .2s, background .2s;
+}
+.x:hover { color: #fff; background: rgba(190, 10, 25, .55); }
+
+/* ---------- Контакты: отдельный однотонный блок с красной линией сверху ---------- */
+.contacts {
+  position: relative;
+  z-index: 2;
+  padding: 36px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #080102;
+  border-top: 2px solid #8a0f1a;
+  box-shadow: 0 -6px 30px rgba(170, 8, 22, .45);
+}
+.contacts h2 {
+  margin: 0 0 20px;
+  font-family: 'Pirata One', serif;
+  font-weight: 400;
+  font-size: 38px;
+  color: #d9d9de;
+  text-shadow: 0 0 12px rgba(190, 10, 25, .8);
+}
+.links { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+.links a {
+  min-width: 220px;
+  padding: 12px 22px;
+  text-align: center;
+  text-decoration: none;
+  color: #e8dede;
+  border-radius: 20px;
+  background: #130305;
+  border: 1px solid #4e0b12;
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+}
+.links a b {
+  display: block;
+  margin-bottom: 2px;
+  font-family: 'Ruslan Display', serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: #c4121f;
+}
+.links a span { font-size: 18px; font-weight: 700; }
+.links a:hover {
+  transform: translateY(-4px);
+  border-color: #c4121f;
+  box-shadow: 0 0 24px rgba(220, 20, 40, .55);
+}
+
+/* ---------- Только компьютер ---------- */
+.desktop-only-msg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  background: #0a0000;
+  color: #c4121f;
+}
+@media (max-width: 1023px), (pointer: coarse) {
+  .desktop-only-msg { display: flex; }
+}
